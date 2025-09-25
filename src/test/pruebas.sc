@@ -21,11 +21,6 @@ val iSort_Desc = insertionSort[Int](mayorQue)
 val qSort_Asc  = quickSort[Int](menorQue)
 val qSort_Desc = quickSort[Int](mayorQue)
 
-val lAsc100   = (1 to 100).toList
-val lAsc1000  = (1 to 1000).toList
-val lDsc100   = (1 to 100).toList.reverse
-val lDsc1000  = (1 to 1000).toList.reverse
-
 // ======================================================
 // CASOS DE PRUEBA PARA insert
 // ======================================================
