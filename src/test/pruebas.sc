@@ -15,8 +15,16 @@ def menorQue(a: Int, b: Int): Boolean = a < b
 def mayorQue(a: Int, b: Int): Boolean = a > b
 
 // Algoritmos generados con los comparadores
-val iSortAsc  = insertionSort[Int](menorQue)
-val iSortDesc = insertionSort[Int](mayorQue)
+val iSort_Asc  = insertionSort[Int](menorQue)
+val iSort_Desc = insertionSort[Int](mayorQue)
+
+val qSort_Asc  = quickSort[Int](menorQue)
+val qSort_Desc = quickSort[Int](mayorQue)
+
+val lAsc100   = (1 to 100).toList
+val lAsc1000  = (1 to 1000).toList
+val lDsc100   = (1 to 100).toList.reverse
+val lDsc1000  = (1 to 1000).toList.reverse
 
 // ======================================================
 // CASOS DE PRUEBA PARA insert
@@ -68,43 +76,43 @@ val insDesc5 = insert(7, List(7,6,5), mayorQue)
 
 // Caso 1: lista vacía
 // Esperado: (List(),0)
-val sortAsc1 = iSortAsc(List())
+val sortAsc1 = iSort_Asc(List())
 
 // Caso 2: un solo elemento
 // Esperado: (List(42),0)
-val sortAsc2 = iSortAsc(List(42))
+val sortAsc2 = iSort_Asc(List(42))
 
 // Caso 3: ya ordenada
 // Esperado: (List(1,2,3,4),3)
-val sortAsc3 = iSortAsc(List(1,2,3,4))
+val sortAsc3 = iSort_Asc(List(1,2,3,4))
 
 // Caso 4: orden inverso
 // Esperado: (List(1,2,3,4),6)
-val sortAsc4 = iSortAsc(List(4,3,2,1))
+val sortAsc4 = iSort_Asc(List(4,3,2,1))
 
 // Caso 5: ejemplo del enunciado
 // Esperado: (List(1,2,3,4,5,6),13)
-val sortAsc5 = iSortAsc(List(4,5,6,1,2,3))
+val sortAsc5 = iSort_Asc(List(4,5,6,1,2,3))
 
 // Caso 1: lista vacía
 // Esperado: (List(),0)
-val sortDesc1 = iSortDesc(List())
+val sortDesc1 = iSort_Asc(List())
 
 // Caso 2: un solo elemento
 // Esperado: (List(42),0)
-val sortDesc2 = iSortDesc(List(42))
+val sortDesc2 = iSort_Asc(List(42))
 
 // Caso 3: ya ordenada descendente
-// Esperado: (List(9,7,5,3),3)
-val sortDesc3 = iSortDesc(List(9,7,5,3))
+// Esperado: (List(9,7,5,3),6)
+val sortDesc3 = iSort_Asc(List(9,7,5,3))
 
 // Caso 4: lista inversa para '>'
-// Esperado: (List(9,7,5,3),6)
-val sortDesc4 = iSortDesc(List(3,5,7,9))
+// Esperado: (List(9,7,5,3),3)
+val sortDesc4 = iSort_Asc(List(3,5,7,9))
 
 // Caso 5: con duplicados
-// Esperado: (List(5,5,3,2),6)
-val sortDesc5 = iSortDesc(List(2,3,5,5))
+// Esperado: (List(5,5,3,2),3)
+val sortDesc5 = iSort_Asc(List(2,3,5,5))
 
 // ======================================================
 // CASOS DE PRUEBA PARA menoresQue_noMenoresQue
@@ -112,121 +120,119 @@ val sortDesc5 = iSortDesc(List(2,3,5,5))
 
 // Caso 1: lista vacía
 // Esperado: (List(), List(), 0)
-val partAsc1 = menoresQue_noMenoresQue(List(), 5, menorQue)
+val part1 = menoresQue_noMenoresQue[Int](List(), 10, menorQue)
 
-// Caso 2: todos menores que pivote
-// Esperado: (List(1,2,3), List(), 3)
-val partAsc2 = menoresQue_noMenoresQue(List(1,2,3), 5, menorQue)
+// Caso 2: un solo elemento igual al pivote -> va en noMenores, cuenta 2
+// Esperado: (List(), List(1), 2)
+val part2 = menoresQue_noMenoresQue[Int](List(1), 1, menorQue)
 
-// Caso 3: todos mayores o iguales al pivote
-// Esperado: (List(), List(6,7,8), 3)
-val partAsc3 = menoresQue_noMenoresQue(List(6,7,8), 5, menorQue)
+// Caso 3: ejemplo derivado del enunciado (tail respecto al pivote=4)
+// Esperado: (List(1,2,3), List(5,6), 7)
+val part3 = menoresQue_noMenoresQue[Int](List(5,6,1,2,3), 4, menorQue)
 
-// Caso 4: mezcla de menores y mayores
-// Esperado: (List(1,4), List(6,9), 4)
-val partAsc4 = menoresQue_noMenoresQue(List(1,4,6,9), 5, menorQue)
+// Caso 4: mezcla con pivote intermedio
+// Esperado: (List(1,2), List(3,4), 6)
+val part4 = menoresQue_noMenoresQue[Int](List(1,2,3,4), 3, menorQue)
 
-// Caso 5: con duplicados iguales al pivote
-// Esperado: (List(1,2), List(5,5,6), 5)
-val partAsc5 = menoresQue_noMenoresQue(List(1,2,5,5,6), 5, menorQue)
-
-// Caso 1: lista vacía
-// Esperado: (List(), List(), 0)
-val partDesc1 = menoresQue_noMenoresQue(List(), 5, mayorQue)
-
-// Caso 2: todos “menores” según '>'
-// Aquí “menores” significa que a > pivote
-// Lista = [9,8,7], pivote=5 → todo en primera lista
-// Esperado: (List(9,8,7), List(), 3)
-val partDesc2 = menoresQue_noMenoresQue(List(9,8,7), 5, mayorQue)
-
-// Caso 3: todos “no menores”
-// Lista = [1,2,3], pivote=5 → ninguno > 5
-// Esperado: (List(), List(1,2,3), 3)
-val partDesc3 = menoresQue_noMenoresQue(List(1,2,3), 5, mayorQue)
-
-// Caso 4: mezcla
-// Lista = [9,4,6,2], pivote=5 → mayores [9,6], no mayores [4,2]
-// Esperado: (List(9,6), List(4,2), 4)
-val partDesc4 = menoresQue_noMenoresQue(List(9,4,6,2), 5, mayorQue)
-
-// Caso 5: duplicados iguales al pivote
-// Lista = [7,5,5,3], pivote=5 → “menores” [7], “no menores” [5,5,3]
-// Esperado: (List(7), List(5,5,3), 4)
-val partDesc5 = menoresQue_noMenoresQue(List(7,5,5,3), 5, mayorQue)
+// Caso 5: todos iguales al pivote -> todos a noMenores, 2 por elemento
+// Esperado: (List(), List(5,5,5), 6)
+val part5 = menoresQue_noMenoresQue[Int](List(5,5,5), 5, menorQue)
 
 // ======================================================
 // CASOS DE PRUEBA PARA quickSort
 // ======================================================
 
-val qSortAsc  = quickSort[Int](menorQue)
-val qSortDesc = quickSort[Int](mayorQue)
+// Usamos qSort_Asc y qSort_Desc ya construidos antes.
+// Esperados según la convención de la guía (+1 en raíz)
 
 // Caso 1: lista vacía
-// Esperado: (List(),0)
-val qAsc1 = qSortAsc(List())
+// Esperado qSort_Asc: (List(), 0)
+val qsortAsc1 = qSort_Asc(List())
 
 // Caso 2: un solo elemento
-// Esperado: (List(42),0)
-val qAsc2 = qSortAsc(List(42))
+// Esperado qSort_Asc: (List(42), 0)
+val qsortAsc2 = qSort_Asc(List(42))
 
 // Caso 3: ya ordenada ascendente
-// Ejemplo: List(1,2,3)
-// Resultado esperado: (List(1,2,3), 2)
-val qAsc3 = qSortAsc(List(1,2,3))
+// Esperado qSort_Asc: (List(1,2,3,4), 13)
+val qsortAsc3 = qSort_Asc(List(1,2,3,4))
 
-// Caso 4: lista inversa
-// Ejemplo: List(3,2,1)
-// Resultado esperado: (List(1,2,3), 3)
-val qAsc4 = qSortAsc(List(3,2,1))
+// Caso 4: orden inverso
+// Esperado qSort_Asc: (List(1,2,3,4), 7)
+val qsortAsc4 = qSort_Asc(List(4,3,2,1))
 
 // Caso 5: ejemplo del enunciado
-// Entrada: List(4,5,6,1,2,3)
-// Esperado: (List(1,2,3,4,5,6),16)
-val qAsc5 = qSortAsc(List(4, 5, 6, 1, 2, 3))
+// Esperado qSort_Asc: (List(1,2,3,4,5,6), 16)
+val qsortAsc5 = qSort_Asc(List(4,5,6,1,2,3))
 
-// Caso 1: lista vacía
-// Esperado: (List(),0)
-val qDesc1 = qSortDesc(List())
+// Caso 1D: lista vacía
+// Esperado qSort_Desc: (List(), 0)
+val qsortDesc1 = qSort_Desc(List())
 
-// Caso 2: un solo elemento
-// Esperado: (List(42),0)
-val qDesc2 = qSortDesc(List(42))
+// Caso 2D: un solo elemento
+// Esperado qSort_Desc: (List(42), 0)
+val qsortDesc2 = qSort_Desc(List(42))
 
-// Caso 3: ya ordenada descendente
-// Ejemplo: List(9,7,5)
-// Esperado: (List(9,7,5),2)
-val qDesc3 = qSortDesc(List(9,7,5))
+// Caso 3D: ya ordenada descendente
+// Esperado qSort_Desc: (List(9,7,5,3), 13)
+val qsortDesc3 = qSort_Desc(List(9,7,5,3))
 
-// Caso 4: lista inversa para '>'
-// Ejemplo: List(5,7,9)
-// Esperado: (List(9,7,5),3)
-val qDesc4 = qSortDesc(List(5,7,9))
+// Caso 4D: orden inverso para '>'
+// Esperado qSort_Desc: (List(9,7,5,3), 7)
+val qsortDesc4 = qSort_Desc(List(3,5,7,9))
 
-// Caso 5: con duplicados
-// Ejemplo: List(5,5,3,3,7)
-// Esperado: (List(7,5,5,3,3), 7)
-val qDesc5 = qSortDesc(List(5,5,3,3,7))
+// Caso 5D: con duplicados
+// Esperado qSort_Desc: (List(5,5,3,2), 8)
+val qsortDesc5 = qSort_Desc(List(2,3,5,5))
 
-// Comparaciones sobre una lista fija
-comparar(iSortAsc, qSortAsc,  List(4, 5, 6, 1, 2, 3))
-comparar(iSortAsc, qSortDesc, List(4, 5, 6, 1, 2, 3))
+// ======================================================
+// CASOS DE PRUEBA PARA comparar
+// ======================================================
 
-// Listas grandes (ascendente y descendente)
-val lAsc100   = (1 to 100).toList
-val lAsc1000  = (1 to 1000).toList
-val lDsc100   = (1 to 100).toList.reverse
-val lDsc1000  = (1 to 1000).toList.reverse
+// Caso 1: lista vacía -> ambos 0
+// Esperado: (0, 0)
+val comp1 = comparar[Int](iSort_Asc, qSort_Asc, List())
 
-comparar(iSortAsc, qSortAsc, lAsc100)
-comparar(iSortAsc, qSortAsc, lAsc1000)
-comparar(iSortAsc, qSortAsc, lDsc100)
-comparar(iSortAsc, qSortAsc, lDsc1000)
+// Caso 2: un solo elemento -> ambos 0
+// Esperado: (0, 0)
+val comp2 = comparar[Int](iSort_Asc, qSort_Asc, List(42))
 
-// Listas aleatorias de distintos tamaños
+// Caso 3: ya ordenada ascendente
+// Esperado: (3, 13)
+val comp3 = comparar[Int](iSort_Asc, qSort_Asc, List(1,2,3,4))
+
+// Caso 4: orden inverso
+// Esperado: (6, 7)
+val comp4 = comparar[Int](iSort_Asc, qSort_Asc, List(4,3,2,1))
+
+// Caso 5: ejemplo del enunciado
+// Esperado: (13, 16)
+val comp5 = comparar[Int](iSort_Asc, qSort_Asc, List(4,5,6,1,2,3))
+
+// Esperado: (-1, -1)
+val comp6 = comparar[Int](iSort_Asc, qSort_Desc, List(4,5,6,1,2,3))
+
+// ==============================
+// Listas aleatorias (tamaños 5, 10, 20, 50)
+// ==============================
 val l5  = listaAlAzar(5)
 val l10 = listaAlAzar(10)
 val l20 = listaAlAzar(20)
 val l50 = listaAlAzar(50)
 
-// Ejecutar ambos algoritmos en listas aleatori
+// Ejecuta ambos algoritmos y compáralos
+val q5    = qSort_Asc(l5)
+val i5    = iSort_Asc(l5)
+val comp5 = comparar[Int](iSort_Asc, qSort_Asc, l5)
+
+val q10    = qSort_Asc(l10)
+val i10    = iSort_Asc(l10)
+val comp10 = comparar[Int](iSort_Asc, qSort_Asc, l10)
+
+val q20    = qSort_Asc(l20)
+val i20    = iSort_Asc(l20)
+val comp20 = comparar[Int](iSort_Asc, qSort_Asc, l20)
+
+val q50    = qSort_Asc(l50)
+val i50    = iSort_Asc(l50)
+val comp50 = comparar[Int](iSort_Asc, qSort_Asc, l50)

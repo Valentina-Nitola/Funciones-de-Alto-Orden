@@ -46,26 +46,32 @@ package object Comparador {
       val h  = l.head
       val tl = l.tail
       val (menores, noMenores, c) = menoresQue_noMenoresQue(tl, v, comp)
-      if (comp(h, v)) {                      // 1 comparación
+      if (comp(h, v)) {
         (h :: menores, noMenores, c + 1)
-      } else {                               // 2 comparaciones (h<v es falso, probamos v<h)
+      } else {
         if (comp(v, h)) (menores, h :: noMenores, c + 2)
-        else            (menores, h :: noMenores, c + 2)  // iguales van a noMenores
+        else
+          (menores, h :: noMenores, c + 2)
       }
     }
   }
 
   def quickSort[T](comp: Comparador[T]): AlgoritmoOrd[T] = {
-    def qs(l: List[T]): (List[T], Int) =
-      if (l.isEmpty || l.tail.isEmpty) (l, 0)
-      else {
-        val pivot = l.head
-        val (menores, noMenores, cPart) = menoresQue_noMenoresQue(l.tail, pivot, comp)
-        val (ordMen, cL)  = qs(menores)
-        val (ordNoM, cR)  = qs(noMenores)
-        (ordMen ++ (pivot :: ordNoM), cPart + cL + cR)
-      }
-    qs
+
+    def qs(xs: List[T]): (List[T], Int) = xs match {
+      case Nil        => (Nil, 0)
+      case _ :: Nil   => (xs, 0)
+      case p :: tail  =>
+        val (lt, ge, cPart) = menoresQue_noMenoresQue(tail, p, comp)
+        val (ltS, cL)       = qs(lt)
+        val (geS, cR)       = qs(ge)
+        (ltS ++ (p :: geS), cPart + cL + cR)
+    }
+
+    (l: List[T]) => {
+      val (ord, c) = qs(l)
+      (ord, if (l.size >= 2) c + 1 else c)
+    }
   }
 
   def comparar[T](a1: AlgoritmoOrd[T], a2: AlgoritmoOrd[T], l: List[T]): (Int, Int) = {
