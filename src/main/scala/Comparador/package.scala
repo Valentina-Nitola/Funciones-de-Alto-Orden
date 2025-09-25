@@ -40,6 +40,34 @@ package object Comparador {
     (xs: List[T]) => go(xs)
   }
 
+  def menoresQue_noMenoresQue[T](l: List[T], v: T, comp: Comparador[T]): (List[T], List[T], Int) = {
+    if (l.isEmpty) (Nil, Nil, 0)
+    else {
+      val h  = l.head
+      val tl = l.tail
+      val (menores, noMenores, c) = menoresQue_noMenoresQue(tl, v, comp)
+      if (comp(h, v)) {                      // 1 comparación
+        (h :: menores, noMenores, c + 1)
+      } else {                               // 2 comparaciones (h<v es falso, probamos v<h)
+        if (comp(v, h)) (menores, h :: noMenores, c + 2)
+        else            (menores, h :: noMenores, c + 2)  // iguales van a noMenores
+      }
+    }
+  }
+
+  def quickSort[T](comp: Comparador[T]): AlgoritmoOrd[T] = {
+    def qs(l: List[T]): (List[T], Int) =
+      if (l.isEmpty || l.tail.isEmpty) (l, 0)
+      else {
+        val pivot = l.head
+        val (menores, noMenores, cPart) = menoresQue_noMenoresQue(l.tail, pivot, comp)
+        val (ordMen, cL)  = qs(menores)
+        val (ordNoM, cR)  = qs(noMenores)
+        (ordMen ++ (pivot :: ordNoM), cPart + cL + cR)
+      }
+    qs
+  }
+
   def comparar[T](a1: AlgoritmoOrd[T], a2: AlgoritmoOrd[T], l: List[T]): (Int, Int) = {
     // Recibe dos algoritmos de ordenamiento y una lista para ordenar
     // y devuelve una pareja con el número de comparaciones hechas por a1,
@@ -50,5 +78,4 @@ package object Comparador {
     val (l2, c2) = a2(l)
     if (l1 == l2) (c1, c2) else (-1, -1)
   }
-
 }
